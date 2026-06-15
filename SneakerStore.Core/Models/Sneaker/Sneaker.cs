@@ -20,13 +20,16 @@ public class Sneaker
     public decimal Price { get; }
     public string Description { get; }
     public string? ImageUrl { get; }
-    
     public ICollection<SneakerSize> Sizes { get; }
 
     public static Result<Sneaker> Create(Guid id, string name, decimal price, string description,
         ICollection<SneakerSize> sizes,
         string? imageUrl = null)
     {
+        var sneaker = new Sneaker(
+            id, name, price, description, sizes, imageUrl);
         
+        return Result<Sneaker>.Success(sneaker);
     }
+    
 }

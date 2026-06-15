@@ -33,3 +33,4 @@ D:\RiderProjects\SneakerStore\SneakerStore.API\obj\Debug\net10.0\refint\SneakerS
 D:\RiderProjects\SneakerStore\SneakerStore.API\obj\Debug\net10.0\SneakerStore.API.pdb
 D:\RiderProjects\SneakerStore\SneakerStore.API\obj\Debug\net10.0\SneakerStore.API.genruntimeconfig.cache
 D:\RiderProjects\SneakerStore\SneakerStore.API\obj\Debug\net10.0\ref\SneakerStore.API.dll
+D:\RiderProjects\SneakerStore\SneakerStore.API\obj\Debug\net10.0\SneakerStore.API.sourcelink.json
