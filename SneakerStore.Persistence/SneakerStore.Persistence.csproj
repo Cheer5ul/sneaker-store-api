@@ -19,4 +19,8 @@
       <ProjectReference Include="..\SneakerStore.Core\SneakerStore.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Repositories\UserRepositories\" />
+    </ItemGroup>
+
 </Project>

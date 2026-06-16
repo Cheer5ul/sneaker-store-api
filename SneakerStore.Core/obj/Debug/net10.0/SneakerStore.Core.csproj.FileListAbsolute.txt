@@ -1,0 +1,12 @@
+D:\RiderProjects\SneakerStore\SneakerStore.Core\bin\Debug\net10.0\SneakerStore.Core.deps.json
+D:\RiderProjects\SneakerStore\SneakerStore.Core\bin\Debug\net10.0\SneakerStore.Core.dll
+D:\RiderProjects\SneakerStore\SneakerStore.Core\bin\Debug\net10.0\SneakerStore.Core.pdb
+D:\RiderProjects\SneakerStore\SneakerStore.Core\obj\Debug\net10.0\SneakerStore.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\RiderProjects\SneakerStore\SneakerStore.Core\obj\Debug\net10.0\SneakerStore.Core.AssemblyInfoInputs.cache
+D:\RiderProjects\SneakerStore\SneakerStore.Core\obj\Debug\net10.0\SneakerStore.Core.AssemblyInfo.cs
+D:\RiderProjects\SneakerStore\SneakerStore.Core\obj\Debug\net10.0\SneakerStore.Core.csproj.CoreCompileInputs.cache
+D:\RiderProjects\SneakerStore\SneakerStore.Core\obj\Debug\net10.0\SneakerStore.Core.sourcelink.json
+D:\RiderProjects\SneakerStore\SneakerStore.Core\obj\Debug\net10.0\SneakerStore.Core.dll
+D:\RiderProjects\SneakerStore\SneakerStore.Core\obj\Debug\net10.0\refint\SneakerStore.Core.dll
+D:\RiderProjects\SneakerStore\SneakerStore.Core\obj\Debug\net10.0\SneakerStore.Core.pdb
+D:\RiderProjects\SneakerStore\SneakerStore.Core\obj\Debug\net10.0\ref\SneakerStore.Core.dll

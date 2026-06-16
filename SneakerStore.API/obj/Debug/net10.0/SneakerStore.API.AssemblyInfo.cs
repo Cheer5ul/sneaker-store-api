@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("a1281694-0564-4137-9ac3-eb4e229a2d6a")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("SneakerStore.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dca9d25b3d335a28377cee80752368e9b81f5c9b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+418295193c0e4391aa721b926fc2f8cbadccde71")]
 [assembly: System.Reflection.AssemblyProductAttribute("SneakerStore.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SneakerStore.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
