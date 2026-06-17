@@ -33,4 +33,12 @@ public class SneakerSize
         
         return  Result<SneakerSize>.Success(sneakerSize);
     }
+    
+    public static SneakerSize Reconstitute(Guid id, decimal size, int remainedInStock, Guid sneakerId)
+    {
+        var sneakerSize = new SneakerSize(
+            id, size, remainedInStock, sneakerId);
+        
+        return sneakerSize;
+    }
 }
