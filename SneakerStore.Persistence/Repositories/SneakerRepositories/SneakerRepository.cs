@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SneakerStore.Core.Models.Sneaker;
+using SneakerStore.Persistence.Entities.Sneaker;
 
 namespace SneakerStore.Persistence.Repositories.SneakerRepositories;
 
@@ -20,18 +21,18 @@ public class SneakerRepository
             .ToListAsync(cancellationToken);
 
         var sneakers = sneakerEntities.Select(sneakerEntity =>
-            Sneaker.Create(
+            Sneaker.Reconstitute(
                 sneakerEntity.Id,
                 sneakerEntity.Name,
                 sneakerEntity.Price,
                 sneakerEntity.Description,
-                sneakerEntity.Sizes.Select(sizeEntity => SneakerSize.Create(
+                sneakerEntity.Sizes.Select(sizeEntity => SneakerSize.Reconstitute(
                     sizeEntity.Id,
                     sizeEntity.Size,
                     sizeEntity.RemainedInStock,
-                    sizeEntity.SneakerId).Value!).ToList(),
+                    sizeEntity.SneakerId)).ToList(),
                 sneakerEntity.ImageUrl
-            ).Value!).ToList();
+            )).ToList();
 
         return sneakers;
     }
@@ -62,5 +63,18 @@ public class SneakerRepository
     }
 
     // Granular methods for updates
-    
+    // public async Task<Guid> UpdateName(Guid id, string newName,
+    //     CancellationToken cancellationToken = default)
+    // {
+    //     var sneakerEntity = await _dbContext.Sneakers.AsNoTracking().Include(sneakerEntity => sneakerEntity.Sizes)
+    //         .FirstOrDefaultAsync(sneakerEntity => sneakerEntity.Id == id, cancellationToken);
+    //     var sneaker = Sneaker.Reconstitute(
+    //         sneakerEntity.Id,
+    //         sneakerEntity.Name,
+    //         sneakerEntity.Price,
+    //         sneakerEntity.Description,
+    //         sneakerEntity.Sizes,
+    //         sneakerEntity.ImageUrl);
+    //
+    // }
 }
