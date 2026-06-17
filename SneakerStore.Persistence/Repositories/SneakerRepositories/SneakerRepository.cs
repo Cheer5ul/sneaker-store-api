@@ -35,4 +35,32 @@ public class SneakerRepository
 
         return sneakers;
     }
+
+    public async Task<Guid> Create(Sneaker sneaker,
+        CancellationToken cancellationToken = default)
+    {
+        var sneakerEntity = new SneakerEntity()
+        {
+            Id = sneaker.Id,
+            Name = sneaker.Name,
+            Price = sneaker.Price,
+            Description = sneaker.Description,
+            Sizes = sneaker.Sizes.Select(sizeEntity => new SneakerSizeEntity()
+            {
+                Id = sizeEntity.Id,
+                RemainedInStock = sizeEntity.RemainedInStock,
+                Size = sizeEntity.Size,
+                SneakerId = sizeEntity.SneakerId
+            }).ToList(),
+            ImageUrl = sneaker.ImageUrl
+        };
+
+        await _dbContext.Sneakers.AddAsync(sneakerEntity, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        return sneakerEntity.Id;
+    }
+
+    // Granular methods for updates
+    
 }
