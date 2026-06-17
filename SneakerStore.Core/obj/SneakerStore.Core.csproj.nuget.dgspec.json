@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "D:\\RiderProjects\\SneakerStore\\SneakerStore.Core\\SneakerStore.Core.csproj": {}
+    "C:\\Users\\gr304209\\sneaker-store-api\\SneakerStore.Core\\SneakerStore.Core.csproj": {}
   },
   "projects": {
-    "D:\\RiderProjects\\SneakerStore\\SneakerStore.Core\\SneakerStore.Core.csproj": {
+    "C:\\Users\\gr304209\\sneaker-store-api\\SneakerStore.Core\\SneakerStore.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\RiderProjects\\SneakerStore\\SneakerStore.Core\\SneakerStore.Core.csproj",
+        "projectUniqueName": "C:\\Users\\gr304209\\sneaker-store-api\\SneakerStore.Core\\SneakerStore.Core.csproj",
         "projectName": "SneakerStore.Core",
-        "projectPath": "D:\\RiderProjects\\SneakerStore\\SneakerStore.Core\\SneakerStore.Core.csproj",
-        "packagesPath": "C:\\Users\\oxyge\\.nuget\\packages\\",
-        "outputPath": "D:\\RiderProjects\\SneakerStore\\SneakerStore.Core\\obj\\",
+        "projectPath": "C:\\Users\\gr304209\\sneaker-store-api\\SneakerStore.Core\\SneakerStore.Core.csproj",
+        "packagesPath": "C:\\Users\\gr304209\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gr304209\\sneaker-store-api\\SneakerStore.Core\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\oxyge\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\gr304209\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -67,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Users\\gr304209\\.dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
