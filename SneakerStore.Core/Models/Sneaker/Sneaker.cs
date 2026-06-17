@@ -26,6 +26,18 @@ public class Sneaker
         ICollection<SneakerSize> sizes,
         string? imageUrl = null)
     {
+        List<Error> errors = [];
+        
+        if (string.IsNullOrWhiteSpace(name) || name.Length > MAX_NAME_LENGTH)
+            errors.Add(SneakerErrors.InvalidName(name));
+        if (string.IsNullOrWhiteSpace(description) || description.Length > MAX_DESCRIPTION_LENGTH)
+            errors.Add(SneakerErrors.InvalidDescription(description));
+        if (price <= 0)
+            errors.Add(SneakerErrors.InvalidPrice(price));
+        
+        if(errors.Count > 0)
+            return Result<Sneaker>.Failure(errors);
+        
         var sneaker = new Sneaker(
             id, name, price, description, sizes, imageUrl);
         
