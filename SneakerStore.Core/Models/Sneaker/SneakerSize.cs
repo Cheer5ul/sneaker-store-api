@@ -19,6 +19,15 @@ public class SneakerSize
 
     public static Result<SneakerSize> Create(Guid id, decimal size, int remainedInStock, Guid sneakerId)
     {
+        List<Error> errors = []; 
+        if(size < MINIMAL_SIZE)
+            errors.Add(SneakerSizeErrors.InvalidSize(size));
+        if(remainedInStock < 0)
+            errors.Add(SneakerSizeErrors.InvalidRemainedInStockNumber(remainedInStock));
+        
+        if (errors.Count > 0)
+            return Result<SneakerSize>.Failure(errors);
+        
         var sneakerSize = new SneakerSize(
             id, size, remainedInStock, sneakerId);
         
