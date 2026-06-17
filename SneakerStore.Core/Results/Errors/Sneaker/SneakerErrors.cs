@@ -2,4 +2,19 @@
 
 public static class SneakerErrors
 {
+    private static class Codes
+    {
+        public const string InvalidName = "Sneaker.InvalidName";       
+        public const string InvalidDescription = "Sneaker.InvalidDescription";
+        public const string InvalidPrice = "Sneaker.InvalidPrice";
+    }
+
+    public static Error InvalidName(string name)
+        => new Error(Codes.InvalidName, $"Name {name} is invalid.");
+    
+    public static Error InvalidDescription(string description)
+        => new Error(Codes.InvalidDescription, $"Description {description} is invalid.");
+    
+    public static Error InvalidPrice(decimal price)
+        => new Error(Codes.InvalidPrice, $"Price {price} is invalid.");
 }
