@@ -44,5 +44,13 @@ public class Sneaker
         return Result<Sneaker>.Success(sneaker);
     }
     
-    
+    public static Sneaker Reconstitute(Guid id, string name, decimal price, string description,
+        ICollection<SneakerSize> sizes,
+        string? imageUrl = null)
+    {
+        var sneaker = new Sneaker(
+            id, name, price, description, sizes, imageUrl);
+        
+        return sneaker;
+    }
 }
