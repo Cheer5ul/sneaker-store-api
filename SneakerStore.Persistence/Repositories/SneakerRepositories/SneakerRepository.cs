@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SneakerStore.Core.Models.Sneaker;
+using SneakerStore.Core.Results;
+using SneakerStore.Core.Results.Errors;
+using SneakerStore.Core.Results.Errors.Sneaker;
 using SneakerStore.Persistence.Entities.Sneaker;
 
 namespace SneakerStore.Persistence.Repositories.SneakerRepositories;
@@ -63,18 +66,42 @@ public class SneakerRepository
     }
 
     // Granular methods for updates
-    // public async Task<Guid> UpdateName(Guid id, string newName,
-    //     CancellationToken cancellationToken = default)
-    // {
-    //     var sneakerEntity = await _dbContext.Sneakers.AsNoTracking().Include(sneakerEntity => sneakerEntity.Sizes)
-    //         .FirstOrDefaultAsync(sneakerEntity => sneakerEntity.Id == id, cancellationToken);
-    //     var sneaker = Sneaker.Reconstitute(
-    //         sneakerEntity.Id,
-    //         sneakerEntity.Name,
-    //         sneakerEntity.Price,
-    //         sneakerEntity.Description,
-    //         sneakerEntity.Sizes,
-    //         sneakerEntity.ImageUrl);
-    //
-    // }
+    public async Task<(Guid id, Error error)> UpdateName(Guid id, string newName,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await GetSneakerEntityAndSneaker(id, cancellationToken);
+        if(result.IsFailure)
+            return (id, result.Errors.First());
+
+        var updateResult = result.Value.sneaker.UpdateName(newName);
+        if(updateResult.IsFailure) return (id,updateResult.Errors.First());
+        
+        result.Value.sneakerEntity.Name = result.Value.sneaker.Name;
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return (id, Error.None);
+    }
+
+    private async Task<Result<(SneakerEntity sneakerEntity, Sneaker sneaker)>> GetSneakerEntityAndSneaker(
+        Guid id, CancellationToken cancellationToken = default)
+    {
+        var sneakerEntity = await _dbContext.Sneakers
+            .Include(sneakerEntity => sneakerEntity.Sizes)
+            .FirstOrDefaultAsync(sneakerEntity => sneakerEntity.Id == id, cancellationToken);
+        
+        if (sneakerEntity == null) return Result<(SneakerEntity, Sneaker)>.Failure([SneakerErrors.NotFound(id)]);
+        var sneaker = Sneaker.Reconstitute(
+            sneakerEntity.Id,
+            sneakerEntity.Name,
+            sneakerEntity.Price,
+            sneakerEntity.Description,
+            sneakerEntity.Sizes.Select(sizeEntity => SneakerSize.Reconstitute(
+                sizeEntity.Id,
+                sizeEntity.Size,
+                sizeEntity.RemainedInStock,
+                sizeEntity.SneakerId)).ToList(),
+            sneakerEntity.ImageUrl);
+        
+        return Result<(SneakerEntity, Sneaker)>.Success((sneakerEntity, sneaker));
+    }
 }
