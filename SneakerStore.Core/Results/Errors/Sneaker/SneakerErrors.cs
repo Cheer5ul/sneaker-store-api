@@ -1,4 +1,5 @@
-﻿namespace SneakerStore.Core.Results.Errors.Sneaker;
+﻿
+namespace SneakerStore.Core.Results.Errors.Sneaker;
 
 public static class SneakerErrors
 {

@@ -1,9 +1,13 @@
-﻿using SneakerStore.Core.Results;
+﻿using Microsoft.Win32.SafeHandles;
+using SneakerStore.Core.Results;
+using SneakerStore.Core.Results.Errors;
+using SneakerStore.Core.Results.Errors.Sneaker;
 
 namespace SneakerStore.Core.Models.Sneaker;
 
 public class SneakerSize
 {
+    public const int MINIMAL_SIZE = 10;
     private SneakerSize(Guid id, decimal size, int remainedInStock, Guid sneakerId)
     {
         Id = id;
@@ -17,7 +21,7 @@ public class SneakerSize
     
     public Guid SneakerId { get; }
 
-    public static Result<SneakerSize> Create(Guid id, decimal size, int remainedInStock, Guid sneakerId)
+    public static Result<SneakerSize> Create(decimal size, int remainedInStock, Guid sneakerId)
     {
         List<Error> errors = []; 
         if(size < MINIMAL_SIZE)
@@ -29,7 +33,7 @@ public class SneakerSize
             return Result<SneakerSize>.Failure(errors);
         
         var sneakerSize = new SneakerSize(
-            id, size, remainedInStock, sneakerId);
+            Guid.NewGuid(), size, remainedInStock, sneakerId);
         
         return  Result<SneakerSize>.Success(sneakerSize);
     }
