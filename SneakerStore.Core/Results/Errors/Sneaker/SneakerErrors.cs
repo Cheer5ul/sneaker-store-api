@@ -8,6 +8,7 @@ public static class SneakerErrors
         public const string InvalidName = "Sneaker.InvalidName";       
         public const string InvalidDescription = "Sneaker.InvalidDescription";
         public const string InvalidPrice = "Sneaker.InvalidPrice";
+        public const string NotFound = "Sneaker.NotFound";
     }
 
     public static Error InvalidName(string name)
@@ -18,4 +19,6 @@ public static class SneakerErrors
     
     public static Error InvalidPrice(decimal price)
         => new Error(Codes.InvalidPrice, $"Price {price} is invalid.");
+    public static Error NotFound(Guid id)
+        => new Error(Codes.NotFound, $"Sneaker with id {id} is not found.");
 }
