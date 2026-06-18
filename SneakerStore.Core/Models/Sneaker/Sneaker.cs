@@ -60,7 +60,7 @@ public class Sneaker
     }
     
     
-    public Result UpdateName(Guid id, string newName)
+    public Result UpdateName(string newName)
     {
         if (string.IsNullOrWhiteSpace(newName) || newName.Length > MAX_NAME_LENGTH)
             return Result.Failure([SneakerErrors.InvalidName(newName)]);
