@@ -78,4 +78,14 @@ public class Sneaker
         Price = newPrice;
         return Result.Success();
     }
+    
+    public Result UpdateDescription(string newDescription)
+    {
+        if (string.IsNullOrWhiteSpace(newDescription) || newDescription.Length > MAX_DESCRIPTION_LENGTH)
+            return Result.Failure([SneakerErrors.InvalidDescription(newDescription)]);
+        
+        Description = newDescription;
+        
+        return Result.Success();
+    }
 }
