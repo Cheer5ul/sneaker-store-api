@@ -1,0 +1,5 @@
+﻿git rm -r --cached **/obj
+git rm -r --cached **/bin
+git rm --cached **/*.AssemblyInfo.cs
+git rm --cached **/*.AssemblyInfoInputs.cache
+git rm --cached **/rider.project.model.nuget.info
