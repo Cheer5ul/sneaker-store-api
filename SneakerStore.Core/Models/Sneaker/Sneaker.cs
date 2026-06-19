@@ -69,4 +69,13 @@ public class Sneaker
         
         return Result.Success();
     }
+
+    public Result UpdatePrice(decimal newPrice)
+    {
+        if(newPrice < 0)
+            return Result.Failure([SneakerErrors.InvalidPrice(Price)]);
+        
+        Price = newPrice;
+        return Result.Success();
+    }
 }
