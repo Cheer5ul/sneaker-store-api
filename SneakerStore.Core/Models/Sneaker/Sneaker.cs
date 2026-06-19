@@ -88,4 +88,14 @@ public class Sneaker
         
         return Result.Success();
     }
+
+    public Result UpdateImageUrl(string newImageUrl)
+    {
+        if(string.IsNullOrWhiteSpace(ImageUrl))
+            return Result.Failure([SneakerErrors.InvalidImageUrl(newImageUrl)]);
+        
+        ImageUrl = newImageUrl;
+        
+        return Result.Success();
+    }
 }
