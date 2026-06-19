@@ -86,7 +86,7 @@ public class SneakerRepository
         Guid id, CancellationToken cancellationToken = default)
     {
         var sneakerEntity = await _dbContext.Sneakers
-            .Include(sneakerEntity => sneakerEntity.Sizes)
+            .Include(s => s.Sizes)
             .FirstOrDefaultAsync(sneakerEntity => sneakerEntity.Id == id, cancellationToken);
         
         if (sneakerEntity == null) return Result<(SneakerEntity, Sneaker)>.Failure([SneakerErrors.NotFound(id)]);
