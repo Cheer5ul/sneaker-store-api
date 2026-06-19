@@ -66,20 +66,70 @@ public class SneakerRepository
     }
 
     // Granular methods for updates
-    public async Task<(Guid id, Error error)> UpdateName(Guid id, string newName,
+    public async Task<(Guid id, List<Error> errors)> UpdateName(Guid id, string newName,
         CancellationToken cancellationToken = default)
     {
+        // Loading the entities (methods is mapping Sneaker to domain)
         var result = await GetSneakerEntityAndSneaker(id, cancellationToken);
-        if(result.IsFailure)
-            return (id, result.Errors.First());
+        if(result.IsFailure) return (id, result.Errors);
 
+        // Calling domain method with validation
         var updateResult = result.Value.sneaker.UpdateName(newName);
-        if(updateResult.IsFailure) return (id,updateResult.Errors.First());
+        if(updateResult.IsFailure) return (id,updateResult.Errors); // the error
         
+        // Mapping back and saving
         result.Value.sneakerEntity.Name = result.Value.sneaker.Name;
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return (id, Error.None);
+        return (id, [Error.None]);
+    }
+
+    public async Task<(Guid id, List<Error> errors)> UpdatePrice(Guid id, decimal newPrice,
+        CancellationToken cancellationToken = default)
+    {
+        // Loading the entities (methods is mapping Sneaker to domain)
+        var result = await GetSneakerEntityAndSneaker(id, cancellationToken);
+        if(result.IsFailure) return (id, result.Errors);
+        
+        // Calling domain method with validation
+        var updateResult = result.Value.sneaker.UpdatePrice(newPrice);
+        if(updateResult.IsFailure) return (id, updateResult.Errors); // the error
+        
+        // Mapping back and saving
+        result.Value.sneakerEntity.Price = result.Value.sneaker.Price;
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        return (id, [Error.None]);
+    }
+
+    public async Task<(Guid id, List<Error> errors)> UpdateDescription(Guid id, string newDescription,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await GetSneakerEntityAndSneaker(id, cancellationToken);
+        if(result.IsFailure) return (id, result.Errors);
+        
+        var updateResult = result.Value.sneaker.UpdateDescription(newDescription);
+        if(updateResult.IsFailure) return (id, updateResult.Errors);
+        
+        result.Value.sneakerEntity.Description = result.Value.sneaker.Description;
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        return (id, [Error.None]);
+    }
+
+    public async Task<(Guid id, List<Error> errors)> UpdateImageUrl(Guid id, string newImageUrl,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await GetSneakerEntityAndSneaker(id, cancellationToken);
+        if(result.IsFailure) return (id, result.Errors);
+        
+        var updateResult = result.Value.sneaker.UpdateImageUrl(newImageUrl);
+        if(updateResult.IsFailure) return (id, updateResult.Errors);
+        
+        result.Value.sneakerEntity.ImageUrl = result.Value.sneaker.ImageUrl;
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        return (id, [Error.None]);
     }
 
     private async Task<Result<(SneakerEntity sneakerEntity, Sneaker sneaker)>> GetSneakerEntityAndSneaker(
