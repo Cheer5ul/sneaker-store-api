@@ -65,7 +65,9 @@ public class SneakerRepository
         return sneakerEntity.Id;
     }
 
-    // Granular methods for updates
+    #region Granular methods for updates
+    
+    // need to move validation to Application layer! 
     public async Task<(Guid id, List<Error> errors)> UpdateName(Guid id, string newName,
         CancellationToken cancellationToken = default)
     {
@@ -154,4 +156,50 @@ public class SneakerRepository
         
         return Result<(SneakerEntity, Sneaker)>.Success((sneakerEntity, sneaker));
     }
+    
+    #endregion
+    
+    // Methods to interact with SneakerSize entity
+    public async Task<List<SneakerSize>> GetAllSizes(Guid sneakerId,
+        CancellationToken cancellationToken = default)
+    {
+        var sneakerSizeEntities = await _dbContext.SneakerSizes
+            .AsNoTracking()
+            .Where(ssEntity => ssEntity.SneakerId == sneakerId)
+            .ToListAsync(cancellationToken);
+
+        var sneakerSizes = sneakerSizeEntities
+            .Select(ssEntity => SneakerSize.Reconstitute(
+                ssEntity.Id,
+                ssEntity.Size,
+                ssEntity.RemainedInStock,
+                ssEntity.SneakerId)).ToList();
+        
+        return sneakerSizes;
+    }
+
+    public async Task<Guid> CreateSneakerSize(Guid sneakerId,
+        SneakerSize sneakerSize, CancellationToken cancellationToken = default)
+    {
+        // make sure the item exists in application
+        
+        var sneakerEntity = await _dbContext.Sneakers
+            .Where(sEntity => sEntity.Id == sneakerId).Include(sEntity => sEntity.Sizes)
+            .FirstAsync(cancellationToken);
+
+        var sneakerSizeEntity = new SneakerSizeEntity()
+        {
+            Id = sneakerSize.Id,
+            Size = sneakerSize.Size,
+            RemainedInStock = sneakerSize.RemainedInStock,
+            SneakerId = sneakerEntity.Id
+        };
+        
+        sneakerEntity.Sizes.Add(sneakerSizeEntity);
+        
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return sneakerSizeEntity.Id;
+    }
+    
+    
 }
