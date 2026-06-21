@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SneakerStore.API", "Sneaker
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SneakerStore.Core", "SneakerStore.Core\SneakerStore.Core.csproj", "{E437BADC-C38E-492B-9704-10A1945EFF67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SneakerStore.Appication", "SneakerStore.Appication\SneakerStore.Appication.csproj", "{F4D27295-83A1-469D-AE06-BE1BEC708B96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SneakerStore.Application", "SneakerStore.Application\SneakerStore.Application.csproj", "{F4D27295-83A1-469D-AE06-BE1BEC708B96}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SneakerStore.Persistence", "SneakerStore.Persistence\SneakerStore.Persistence.csproj", "{1A4156D5-52B6-432F-8354-827E5D99BE67}"
 EndProject
