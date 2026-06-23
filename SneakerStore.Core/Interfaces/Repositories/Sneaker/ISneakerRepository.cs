@@ -5,19 +5,8 @@ namespace SneakerStore.Core.Interfaces.Repositories.Sneaker;
 
 public interface ISneakerRepository
 {
-    /// <summary>
-    /// Retrieves all the existing Sneakers.
-    /// </summary>
-    /// <param name="cancellationToken">CancellationToken to cancel an asynchronous operation (optional).</param>
-    /// <returns>A list of all the existing Sneakers.</returns>
     Task<List<Core.Models.Sneaker.Sneaker>> GetAll(CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="sneaker"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    
     Task<Guid> Create(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
 

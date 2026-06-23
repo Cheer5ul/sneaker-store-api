@@ -7,4 +7,8 @@
         <RootNamespace>SneakerStore.Appication</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SneakerStore.Core\SneakerStore.Core.csproj" />
+    </ItemGroup>
+
 </Project>

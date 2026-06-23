@@ -8,18 +8,11 @@ using SneakerStore.Persistence.Entities.Sneaker;
 
 namespace SneakerStore.Persistence.Repositories.Sneaker;
 
-public class SneakerRepository : ISneakerRepository
+public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerRepository
 {
-    private SneakerStoreDbContext _dbContext;
-
-    public SneakerRepository(SneakerStoreDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public async Task<List<Core.Models.Sneaker.Sneaker>> GetAll(CancellationToken cancellationToken = default)
     {
-        var sneakerEntities = await _dbContext.Sneakers
+        var sneakerEntities = await dbContext.Sneakers
             .AsNoTracking()
             .Include(s => s.Sizes)
             .ToListAsync(cancellationToken);
@@ -60,15 +53,15 @@ public class SneakerRepository : ISneakerRepository
             ImageUrl = sneaker.ImageUrl
         };
 
-        await _dbContext.Sneakers.AddAsync(sneakerEntity, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.Sneakers.AddAsync(sneakerEntity, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
         
         return sneakerEntity.Id;
     }
 
     #region Granular methods for updates
     
-    // need to move validation to Application layer! 
+    // need to move validation to Application layer!!!!
     public async Task<(Guid id, List<Error> errors)> UpdateName(Guid id, string newName,
         CancellationToken cancellationToken = default)
     {
@@ -82,7 +75,7 @@ public class SneakerRepository : ISneakerRepository
         
         // Mapping back and saving
         result.Value.sneakerEntity.Name = result.Value.sneaker.Name;
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return (id, [Error.None]);
     }
@@ -100,7 +93,7 @@ public class SneakerRepository : ISneakerRepository
         
         // Mapping back and saving
         result.Value.sneakerEntity.Price = result.Value.sneaker.Price;
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
         
         return (id, [Error.None]);
     }
@@ -115,7 +108,7 @@ public class SneakerRepository : ISneakerRepository
         if(updateResult.IsFailure) return (id, updateResult.Errors);
         
         result.Value.sneakerEntity.Description = result.Value.sneaker.Description;
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
         
         return (id, [Error.None]);
     }
@@ -130,7 +123,7 @@ public class SneakerRepository : ISneakerRepository
         if(updateResult.IsFailure) return (id, updateResult.Errors);
         
         result.Value.sneakerEntity.ImageUrl = result.Value.sneaker.ImageUrl;
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
         
         return (id, [Error.None]);
     }
@@ -138,7 +131,7 @@ public class SneakerRepository : ISneakerRepository
     private async Task<Result<(SneakerEntity sneakerEntity, Core.Models.Sneaker.Sneaker sneaker)>> GetSneakerEntityAndSneaker(
         Guid id, CancellationToken cancellationToken = default)
     {
-        var sneakerEntity = await _dbContext.Sneakers
+        var sneakerEntity = await dbContext.Sneakers
             .Include(s => s.Sizes)
             .FirstOrDefaultAsync(sneakerEntity => sneakerEntity.Id == id, cancellationToken);
         
@@ -163,7 +156,7 @@ public class SneakerRepository : ISneakerRepository
     public async Task Delete(Guid sneakerId,
         CancellationToken cancellationToken = default)
     {
-        await _dbContext.Sneakers
+        await dbContext.Sneakers
             .Where(sEntity => sEntity.Id == sneakerId)
             .Include(s => s.Sizes)
             .ExecuteDeleteAsync(cancellationToken);
@@ -173,7 +166,7 @@ public class SneakerRepository : ISneakerRepository
     public async Task<List<SneakerSize>> GetAllSizes(Guid sneakerId,
         CancellationToken cancellationToken = default)
     {
-        var sneakerSizeEntities = await _dbContext.SneakerSizes
+        var sneakerSizeEntities = await dbContext.SneakerSizes
             .AsNoTracking()
             .Where(ssEntity => ssEntity.SneakerId == sneakerId)
             .ToListAsync(cancellationToken);
@@ -193,7 +186,7 @@ public class SneakerRepository : ISneakerRepository
     {
         // make sure the item exists in application
         
-        var sneakerEntity = await _dbContext.Sneakers
+        var sneakerEntity = await dbContext.Sneakers
             .Where(sEntity => sEntity.Id == sneakerId).Include(sEntity => sEntity.Sizes)
             .FirstAsync(cancellationToken);
 
@@ -207,23 +200,22 @@ public class SneakerRepository : ISneakerRepository
         
         sneakerEntity.Sizes.Add(sneakerSizeEntity);
         
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
         return sneakerSizeEntity.Id;
     }
 
     // public async Task UpdateSizeSize(Guid sneakerId, Guid sneakerSizeId,
     //     decimal newSize)
     // {
-    // 
+    //  // make sure the item exists in application
     // }
-    
 
     public async Task DeleteSize(Guid sneakerId,
         Guid sneakerSizeId, CancellationToken cancellationToken = default)
     {
         // make sure the item exists in application
         
-        await _dbContext.SneakerSizes
+        await dbContext.SneakerSizes
             .Where(ssEntity => ssEntity.SneakerId == sneakerId
             && ssEntity.Id == sneakerSizeId)
             .ExecuteDeleteAsync(cancellationToken);

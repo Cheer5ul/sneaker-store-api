@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net10.0": {}
+    "net10.0": {
+      "SneakerStore.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/SneakerStore.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SneakerStore.Core.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "SneakerStore.Core/1.0.0": {
+      "type": "project",
+      "path": "../SneakerStore.Core/SneakerStore.Core.csproj",
+      "msbuildProject": "../SneakerStore.Core/SneakerStore.Core.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net10.0": []
+    "net10.0": [
+      "SneakerStore.Core >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\oxyge\\.nuget\\packages\\": {},
@@ -38,7 +57,11 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\RiderProjects\\SneakerStore\\SneakerStore.Core\\SneakerStore.Core.csproj": {
+              "projectPath": "D:\\RiderProjects\\SneakerStore\\SneakerStore.Core\\SneakerStore.Core.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
