@@ -34,6 +34,14 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
         return sneakers;
     }
 
+    public async Task<bool> SneakerExists(Guid id, CancellationToken cancellationToken = default)
+    {
+        var sneakerEntity = await dbContext.Sneakers
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+        
+        return sneakerEntity != null;
+    }
+
     public async Task<Guid> Create(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default)
     {

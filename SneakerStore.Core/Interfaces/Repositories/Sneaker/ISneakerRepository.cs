@@ -5,7 +5,9 @@ namespace SneakerStore.Core.Interfaces.Repositories.Sneaker;
 
 public interface ISneakerRepository
 {
-    Task<List<Core.Models.Sneaker.Sneaker>> GetAll(CancellationToken cancellationToken = default);
+    Task<List<Models.Sneaker.Sneaker>> GetAll(CancellationToken cancellationToken = default);
+    
+    Task<bool> SneakerExists(Guid id, CancellationToken cancellationToken = default);
     
     Task<Guid> Create(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
