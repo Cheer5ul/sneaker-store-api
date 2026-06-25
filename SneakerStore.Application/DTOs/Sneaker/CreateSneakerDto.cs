@@ -1,6 +1,8 @@
-﻿using SneakerStore.Core.Models.Sneaker;
+﻿using System.Collections.Generic;
+using SneakerStore.Appication.DTOs.Sneaker;
+using SneakerStore.Core.Models.Sneaker;
 
-namespace SneakerStore.Appication.DTOs.Sneaker;
+namespace SneakerStore.Application.DTOs.Sneaker;
 
 public record CreateSneakerDto(
     string Name,
