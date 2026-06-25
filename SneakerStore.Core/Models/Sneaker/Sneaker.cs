@@ -39,10 +39,29 @@ public class Sneaker
     /// <param name="imageUrl">The optional image URL.</param>
     /// <returns>A successful result containing the created Sneaker, or a failed result containing validation errors.</returns>
     public static Result<Sneaker> Create(string name, decimal price, string description,
-        ICollection<SneakerSize> sizes,
+        IEnumerable<(decimal Size, int RemainedInStock)> sizes,
         string? imageUrl = null)
     {
         List<Error> errors = [];
+        
+        var sneakerId = Guid.NewGuid();
+        
+        var sneakerSizeResults = sizes
+            .Select(sSize => SneakerSize.Create(
+                sSize.Size, sSize.RemainedInStock, sneakerId))
+            .ToList();
+        
+        var sneakerSizes = new List<SneakerSize>();
+
+        foreach (var sneakerSize in sneakerSizeResults)
+        {
+            if(sneakerSize.IsFailure)
+                errors.Add(sneakerSize.Errors.First());
+            else if (sneakerSize is { Value: not null, IsFailure: false})
+            {
+                sneakerSizes.Add(sneakerSize.Value);
+            }
+        }
         
         if (string.IsNullOrWhiteSpace(name) || name.Length > MAX_NAME_LENGTH)
             errors.Add(SneakerErrors.InvalidName(name));
@@ -55,7 +74,7 @@ public class Sneaker
             return Result<Sneaker>.Failure(errors);
         
         var sneaker = new Sneaker(
-            Guid.NewGuid(), name, price, description, sizes, imageUrl);
+            sneakerId, name, price, description, sneakerSizes, imageUrl);
         
         return Result<Sneaker>.Success(sneaker);
     }
