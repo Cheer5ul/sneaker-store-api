@@ -17,7 +17,7 @@ public class Sneaker
         Price = price;
         Description = description;
         ImageUrl = imageUrl;
-        Sizes = sizes;
+        _sizes = sizes.ToList();
     }
     
     public Guid Id { get; }
@@ -25,7 +25,9 @@ public class Sneaker
     public decimal Price { get; private set; }
     public string Description { get; private set; }
     public string? ImageUrl { get; private set; }
-    public ICollection<SneakerSize> Sizes { get; private set; }
+    
+    private readonly List<SneakerSize> _sizes;
+    public IReadOnlyCollection<SneakerSize> Sizes => _sizes;
 
     /// <summary>
     /// Creates a new Sneaker object with a unique Id after validating name, price, and description.
