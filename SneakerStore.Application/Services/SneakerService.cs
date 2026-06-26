@@ -44,13 +44,27 @@ public class SneakerService(ISneakerRepository sneakerRepository)
         return Result<Guid>.Success(sneakerGuid);
     }
 
+    public async Task<Result> UpdateName(Guid id, string newName,
+        CancellationToken cancellationToken = default)
+    {
+        var sneaker = await sneakerRepository.GetById(id, cancellationToken);
+        
+        if (sneaker == null) return Result.Failure([SneakerErrors.NotFound(id)]);
+        
+        var updateResult = sneaker.UpdateName(newName);
+        if (updateResult.IsFailure) return Result.Failure(updateResult.Errors);
+        
+        await sneakerRepository.UpdateName(id, newName, cancellationToken);
+        
+        return Result.Success();
+    }
+    
+
     public async Task<Result> Delete(Guid id, CancellationToken cancellationToken = default)
     {
         // Making sure the sneaker exists
-        var sneakerExists = await sneakerRepository.SneakerExists(
-            id, cancellationToken);
-
-        if (sneakerExists is false) return Result.Failure([SneakerErrors.NotFound(id)]);
+        var sneakerExists = await sneakerRepository.SneakerExists(id, cancellationToken);
+        if (!sneakerExists) return Result.Failure([SneakerErrors.NotFound(id)]);
         
         await sneakerRepository.Delete(id, cancellationToken);
         return Result.Success();
