@@ -44,25 +44,67 @@ public class SneakerService(ISneakerRepository sneakerRepository)
         return Result<Guid>.Success(sneakerGuid);
     }
 
+    
+    // TODO: Try to refactor methods to avoid boilerplate code
     public async Task<Result> UpdateName(Guid id, string newName,
         CancellationToken cancellationToken = default)
     {
-        var sneaker = await sneakerRepository.GetById(id, cancellationToken);
-        
+        // Making sure the sneaker exists
+        var sneaker = await sneakerRepository.GetById(id, false, cancellationToken);
         if (sneaker == null) return Result.Failure([SneakerErrors.NotFound(id)]);
         
-        var updateResult = sneaker.UpdateName(newName);
+        var updateResult = sneaker.UpdateName(newName); // domain validation 
         if (updateResult.IsFailure) return Result.Failure(updateResult.Errors);
         
-        await sneakerRepository.UpdateName(id, newName, cancellationToken);
+        await sneakerRepository.UpdateName(sneaker, cancellationToken); 
         
         return Result.Success();
     }
-    
+
+    public async Task<Result> UpdatePrice(Guid id, decimal newPrice,
+        CancellationToken cancellationToken = default)
+    {
+        var sneaker = await sneakerRepository.GetById(id, false, cancellationToken);
+        if (sneaker == null) return Result.Failure([SneakerErrors.NotFound(id)]);
+        
+        var updateResult = sneaker.UpdatePrice(newPrice);
+        if (updateResult.IsFailure) return Result.Failure(updateResult.Errors);
+        
+        await sneakerRepository.UpdatePrice(sneaker, cancellationToken);
+        
+        return Result.Success();
+    }
+
+    public async Task<Result> UpdateDescription(Guid id, string newDescription,
+        CancellationToken cancellationToken = default)
+    {
+        var sneaker = await sneakerRepository.GetById(id, false, cancellationToken);
+        if (sneaker == null) return Result.Failure([SneakerErrors.NotFound(id)]);
+        
+        var updateResult = sneaker.UpdateDescription(newDescription);
+        if (updateResult.IsFailure) return Result.Failure(updateResult.Errors);
+        
+        await sneakerRepository.UpdateDescription(sneaker, cancellationToken);
+        
+        return Result.Success();
+    }
+
+    public async Task<Result> UpdateImageUrl(Guid id, string newImageUrl,
+        CancellationToken cancellationToken = default)
+    {
+        var sneaker = await sneakerRepository.GetById(id, false, cancellationToken);
+        if (sneaker == null) return Result.Failure([SneakerErrors.NotFound(id)]);
+        
+        var updateResult = sneaker.UpdateImageUrl(newImageUrl);
+        if (updateResult.IsFailure) return Result.Failure(updateResult.Errors);
+        
+        await sneakerRepository.UpdateImageUrl(sneaker, cancellationToken);
+
+        return Result.Success();
+    }
 
     public async Task<Result> Delete(Guid id, CancellationToken cancellationToken = default)
     {
-        // Making sure the sneaker exists
         var sneakerExists = await sneakerRepository.SneakerExists(id, cancellationToken);
         if (!sneakerExists) return Result.Failure([SneakerErrors.NotFound(id)]);
         
