@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading;
@@ -45,7 +46,7 @@ public class SneakerService(ISneakerRepository sneakerRepository)
     }
 
     
-    // TODO: Try to refactor methods to avoid boilerplate code
+    // TODO: Try to refactor methods to avoid boilerplate code (especially making sure the sneaker exists)
     public async Task<Result> UpdateName(Guid id, string newName,
         CancellationToken cancellationToken = default)
     {
@@ -111,4 +112,16 @@ public class SneakerService(ISneakerRepository sneakerRepository)
         await sneakerRepository.Delete(id, cancellationToken);
         return Result.Success();
     }
+
+    public async Task<Result<List<SneakerSize>>> GetAllSizes(Guid sneakerId,
+        CancellationToken cancellationToken = default)
+    {
+        var sneaker = await sneakerRepository.GetById(sneakerId, false, cancellationToken);
+        if (sneaker == null) return Result<List<SneakerSize>>.Failure([SneakerErrors.NotFound(sneakerId)]);
+        
+        var sizes = await sneakerRepository.GetAllSizes(sneakerId, cancellationToken);
+
+        return Result<List<SneakerSize>>.Success(sizes);
+    }
+    
 }

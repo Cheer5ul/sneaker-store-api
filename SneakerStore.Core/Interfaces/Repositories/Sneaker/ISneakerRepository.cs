@@ -17,7 +17,6 @@ public interface ISneakerRepository
     /// <returns>Sneaker with the given id or null if not found.</returns>
     Task<Core.Models.Sneaker.Sneaker?> GetById(Guid id, bool includeSizes = true,
         CancellationToken cancellationToken = default);
-
     
     /// <summary>
     /// Checks whether a Sneaker with the id exists.
