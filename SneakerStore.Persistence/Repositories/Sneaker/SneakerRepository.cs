@@ -40,7 +40,7 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
     public async Task<Core.Models.Sneaker.Sneaker?> GetById(Guid id, CancellationToken cancellationToken = default)
     {
         var sneakerEntity = await dbContext.Sneakers.Include(sneakerEntity => sneakerEntity.Sizes)
-            .AsNoTracking()
+            // .AsNoTracking()
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         
         if(sneakerEntity == null) return null;
@@ -102,6 +102,7 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
     {
         var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
         sneakerEntity.Name = newName;
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdatePrice(Guid id, decimal newPrice,
@@ -109,6 +110,7 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
     {
         var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
         sneakerEntity.Price = newPrice;
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdateDescription(Guid id, string newDescription,
@@ -116,6 +118,7 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
     {
         var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
         sneakerEntity.Description = newDescription;
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdateImageUrl(Guid id, string newImageUrl,
@@ -123,6 +126,7 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
     {
         var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
         sneakerEntity.ImageUrl = newImageUrl;
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     /// <summary>
