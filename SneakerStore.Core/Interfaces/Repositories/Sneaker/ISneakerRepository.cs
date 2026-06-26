@@ -8,12 +8,15 @@ public interface ISneakerRepository
     Task<List<Models.Sneaker.Sneaker>> GetAll(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Retrieves a Sneaker by an id without check of the existence.
+    /// Retrieves a Sneaker by an id without check of the existence and tracks the entity.
+    /// (AsNoTracking is NOT used).
     /// </summary>
     /// <param name="id">The id of the Sneaker, Guid.</param>
+    /// <param name="includeSizes">Whether you need to include sizes or not, optional parameter, default - true.</param>
     /// <param name="cancellationToken">Cancellation token to cancel an asynchronous operation.</param>
     /// <returns>Sneaker with the given id or null if not found.</returns>
-    Task<Core.Models.Sneaker.Sneaker?> GetById(Guid id, CancellationToken cancellationToken = default);
+    Task<Core.Models.Sneaker.Sneaker?> GetById(Guid id, bool includeSizes = true,
+        CancellationToken cancellationToken = default);
 
     
     /// <summary>
@@ -27,16 +30,16 @@ public interface ISneakerRepository
     Task<Guid> Create(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
 
-    Task UpdateName(Guid id, string newName,
+    Task UpdateName(Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
 
-    Task UpdatePrice(Guid id, decimal newPrice,
+    Task UpdatePrice(Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
 
-    Task UpdateDescription(Guid id, string newDescription,
+    Task UpdateDescription(Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
 
-    Task UpdateImageUrl(Guid id, string newImageUrl,
+    Task UpdateImageUrl(Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
     
     Task Delete(Guid sneakerId,

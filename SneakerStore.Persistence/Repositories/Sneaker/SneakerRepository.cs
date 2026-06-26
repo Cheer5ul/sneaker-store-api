@@ -37,28 +37,36 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
         return sneakers;
     }
     
-    public async Task<Core.Models.Sneaker.Sneaker?> GetById(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Core.Models.Sneaker.Sneaker?> GetById(Guid id, bool includeSizes = true,
+        CancellationToken cancellationToken = default)
     {
-        var sneakerEntity = await dbContext.Sneakers.Include(sneakerEntity => sneakerEntity.Sizes)
-            // .AsNoTracking()
+        var query = dbContext.Sneakers.AsQueryable();
+
+        if (includeSizes)
+            query = query.Include(sneakerEntity => sneakerEntity.Sizes);
+        
+        var sneakerEntity = await query
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         
         if(sneakerEntity == null) return null;
 
-        var sneaker = Core.Models.Sneaker.Sneaker.Reconstitute(
+        var sizes = includeSizes
+            ? sneakerEntity.Sizes
+                .Select(ssEntity => SneakerSize.Reconstitute(
+                    ssEntity.Id,
+                    ssEntity.Size,
+                    ssEntity.RemainedInStock,
+                    ssEntity.SneakerId))
+                .ToList()
+            : [];
+
+        return Core.Models.Sneaker.Sneaker.Reconstitute(
             sneakerEntity.Id,
             sneakerEntity.Name,
             sneakerEntity.Price,
             sneakerEntity.Description,
-            sneakerEntity.Sizes.Select(
-                ssEntity => SneakerSize.Reconstitute(
-                    ssEntity.Id,
-                    ssEntity.Size,
-                    ssEntity.RemainedInStock,
-                    ssEntity.SneakerId)).ToList(),
+            sizes,
             sneakerEntity.ImageUrl);
-
-        return sneaker;
     }
 
     public async Task<bool> SneakerExists(Guid id, CancellationToken cancellationToken = default)
@@ -97,36 +105,44 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
 
     #region Granular methods for updates
     
-    public async Task UpdateName(Guid id, string newName,
+    public async Task UpdateName(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default)
     {
-        var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
-        sneakerEntity.Name = newName;
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.Sneakers
+            .Where(sEntity => sEntity.Id == sneaker.Id)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(entity => entity.Name, sneaker.Name),
+                cancellationToken);
     }
 
-    public async Task UpdatePrice(Guid id, decimal newPrice,
+    public async Task UpdatePrice(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default)
     {
-        var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
-        sneakerEntity.Price = newPrice;
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.Sneakers
+            .Where(sEntity => sEntity.Id == sneaker.Id)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(entity => entity.Price, sneaker.Price),
+                cancellationToken);
     }
 
-    public async Task UpdateDescription(Guid id, string newDescription,
+    public async Task UpdateDescription(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default)
     {
-        var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
-        sneakerEntity.Description = newDescription;
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.Sneakers
+            .Where(sEntity => sEntity.Id == sneaker.Id)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(entity => entity.Description, sneaker.Description),
+                cancellationToken);
     }
 
-    public async Task UpdateImageUrl(Guid id, string newImageUrl,
+    public async Task UpdateImageUrl(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default)
     {
-        var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
-        sneakerEntity.ImageUrl = newImageUrl;
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.Sneakers
+            .Where(sEntity => sEntity.Id == sneaker.Id)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(entity => entity.ImageUrl, sneaker.ImageUrl),
+                cancellationToken);
     }
 
     /// <summary>
