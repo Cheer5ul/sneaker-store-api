@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using SneakerStore.Core.Interfaces.Repositories.Sneaker;
 using SneakerStore.Core.Models.Sneaker;
 using SneakerStore.Core.Results;
@@ -10,6 +11,8 @@ namespace SneakerStore.Persistence.Repositories.Sneaker;
 
 public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerRepository
 {
+    
+    // TODO: Handle race condition between Application existence check and Repository operations
     public async Task<List<Core.Models.Sneaker.Sneaker>> GetAll(CancellationToken cancellationToken = default)
     {
         var sneakerEntities = await dbContext.Sneakers
@@ -34,13 +37,16 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
         return sneakers;
     }
     
-    public async Task<Core.Models.Sneaker.Sneaker> GetById(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Core.Models.Sneaker.Sneaker?> GetById(Guid id, CancellationToken cancellationToken = default)
     {
         var sneakerEntity = await dbContext.Sneakers.Include(sneakerEntity => sneakerEntity.Sizes)
+            .AsNoTracking()
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+        
+        if(sneakerEntity == null) return null;
 
         var sneaker = Core.Models.Sneaker.Sneaker.Reconstitute(
-            sneakerEntity!.Id,
+            sneakerEntity.Id,
             sneakerEntity.Name,
             sneakerEntity.Price,
             sneakerEntity.Description,
@@ -53,11 +59,12 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
             sneakerEntity.ImageUrl);
 
         return sneaker;
-    } 
+    }
 
     public async Task<bool> SneakerExists(Guid id, CancellationToken cancellationToken = default)
     {
         var sneakerEntity = await dbContext.Sneakers
+            .AsNoTracking()
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         
         return sneakerEntity != null;
@@ -90,94 +97,48 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
 
     #region Granular methods for updates
     
-    // need to move validation to Application layer!!!!
-    public async Task<(Guid id, List<Error> errors)> UpdateName(Guid id, string newName,
+    public async Task UpdateName(Guid id, string newName,
         CancellationToken cancellationToken = default)
     {
-        // Loading the entities (methods is mapping Sneaker to domain)
-        var result = await GetSneakerEntityAndSneaker(id, cancellationToken);
-        if(result.IsFailure) return (id, result.Errors);
-
-        // Calling domain method with validation
-        var updateResult = result.Value.sneaker.UpdateName(newName);
-        if(updateResult.IsFailure) return (id,updateResult.Errors); // the error
-        
-        // Mapping back and saving
-        result.Value.sneakerEntity.Name = result.Value.sneaker.Name;
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        return (id, [Error.None]);
+        var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
+        sneakerEntity.Name = newName;
     }
 
-    public async Task<(Guid id, List<Error> errors)> UpdatePrice(Guid id, decimal newPrice,
+    public async Task UpdatePrice(Guid id, decimal newPrice,
         CancellationToken cancellationToken = default)
     {
-        // Loading the entities (methods is mapping Sneaker to domain)
-        var result = await GetSneakerEntityAndSneaker(id, cancellationToken);
-        if(result.IsFailure) return (id, result.Errors);
-        
-        // Calling domain method with validation
-        var updateResult = result.Value.sneaker.UpdatePrice(newPrice);
-        if(updateResult.IsFailure) return (id, updateResult.Errors); // the error
-        
-        // Mapping back and saving
-        result.Value.sneakerEntity.Price = result.Value.sneaker.Price;
-        await dbContext.SaveChangesAsync(cancellationToken);
-        
-        return (id, [Error.None]);
+        var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
+        sneakerEntity.Price = newPrice;
     }
 
-    public async Task<(Guid id, List<Error> errors)> UpdateDescription(Guid id, string newDescription,
+    public async Task UpdateDescription(Guid id, string newDescription,
         CancellationToken cancellationToken = default)
     {
-        var result = await GetSneakerEntityAndSneaker(id, cancellationToken);
-        if(result.IsFailure) return (id, result.Errors);
-        
-        var updateResult = result.Value.sneaker.UpdateDescription(newDescription);
-        if(updateResult.IsFailure) return (id, updateResult.Errors);
-        
-        result.Value.sneakerEntity.Description = result.Value.sneaker.Description;
-        await dbContext.SaveChangesAsync(cancellationToken);
-        
-        return (id, [Error.None]);
+        var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
+        sneakerEntity.Description = newDescription;
     }
 
-    public async Task<(Guid id, List<Error> errors)> UpdateImageUrl(Guid id, string newImageUrl,
+    public async Task UpdateImageUrl(Guid id, string newImageUrl,
         CancellationToken cancellationToken = default)
     {
-        var result = await GetSneakerEntityAndSneaker(id, cancellationToken);
-        if(result.IsFailure) return (id, result.Errors);
-        
-        var updateResult = result.Value.sneaker.UpdateImageUrl(newImageUrl);
-        if(updateResult.IsFailure) return (id, updateResult.Errors);
-        
-        result.Value.sneakerEntity.ImageUrl = result.Value.sneaker.ImageUrl;
-        await dbContext.SaveChangesAsync(cancellationToken);
-        
-        return (id, [Error.None]);
+        var sneakerEntity = await GetSneakerEntity(id, cancellationToken);
+        sneakerEntity.ImageUrl = newImageUrl;
     }
 
-    private async Task<Result<(SneakerEntity sneakerEntity, Core.Models.Sneaker.Sneaker sneaker)>> GetSneakerEntityAndSneaker(
+    /// <summary>
+    /// Retrieves a SneakerEntity be the id. Use when absolutely sure the Sneaker with such an id exists.
+    /// </summary>
+    /// <param name="id">The id of the Sneaker, Guid.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel an asynchronous operation.</param>
+    /// <returns>A SneakerEntity with the given id.</returns>
+    private async Task<SneakerEntity> GetSneakerEntity(
         Guid id, CancellationToken cancellationToken = default)
     {
         var sneakerEntity = await dbContext.Sneakers
             .Include(s => s.Sizes)
-            .FirstOrDefaultAsync(sneakerEntity => sneakerEntity.Id == id, cancellationToken);
-        
-        if (sneakerEntity == null) return Result<(SneakerEntity, Core.Models.Sneaker.Sneaker)>.Failure([SneakerErrors.NotFound(id)]);
-        var sneaker = Core.Models.Sneaker.Sneaker.Reconstitute(
-            sneakerEntity.Id,
-            sneakerEntity.Name,
-            sneakerEntity.Price,
-            sneakerEntity.Description,
-            sneakerEntity.Sizes.Select(sizeEntity => SneakerSize.Reconstitute(
-                sizeEntity.Id,
-                sizeEntity.Size,
-                sizeEntity.RemainedInStock,
-                sizeEntity.SneakerId)).ToList(),
-            sneakerEntity.ImageUrl);
-        
-        return Result<(SneakerEntity, Core.Models.Sneaker.Sneaker)>.Success((sneakerEntity, sneaker));
+            .FirstAsync(sneakerEntity => sneakerEntity.Id == id, cancellationToken);
+
+        return sneakerEntity!;
     }
     
     #endregion

@@ -8,12 +8,13 @@ public interface ISneakerRepository
     Task<List<Models.Sneaker.Sneaker>> GetAll(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Retrieves a Sneaker by an id. Used when absolutely sure the Sneaker with current id exists!
+    /// Retrieves a Sneaker by an id without check of the existence.
     /// </summary>
-    /// <param name="id">The id of the Sneaker, Guid. </param>
+    /// <param name="id">The id of the Sneaker, Guid.</param>
     /// <param name="cancellationToken">Cancellation token to cancel an asynchronous operation.</param>
-    /// <returns>Sneaker with the given id.</returns>
-    Task<Core.Models.Sneaker.Sneaker> GetById(Guid id, CancellationToken cancellationToken = default);
+    /// <returns>Sneaker with the given id or null if not found.</returns>
+    Task<Core.Models.Sneaker.Sneaker?> GetById(Guid id, CancellationToken cancellationToken = default);
+
     
     /// <summary>
     /// Checks whether a Sneaker with the id exists.
@@ -26,16 +27,16 @@ public interface ISneakerRepository
     Task<Guid> Create(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
 
-    Task<(Guid id, List<Error> errors)> UpdateName(Guid id, string newName,
+    Task UpdateName(Guid id, string newName,
         CancellationToken cancellationToken = default);
 
-    Task<(Guid id, List<Error> errors)> UpdatePrice(Guid id, decimal newPrice,
+    Task UpdatePrice(Guid id, decimal newPrice,
         CancellationToken cancellationToken = default);
 
-    Task<(Guid id, List<Error> errors)> UpdateDescription(Guid id, string newDescription,
+    Task UpdateDescription(Guid id, string newDescription,
         CancellationToken cancellationToken = default);
 
-    Task<(Guid id, List<Error> errors)> UpdateImageUrl(Guid id, string newImageUrl,
+    Task UpdateImageUrl(Guid id, string newImageUrl,
         CancellationToken cancellationToken = default);
     
     Task Delete(Guid sneakerId,
