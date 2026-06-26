@@ -33,6 +33,27 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
 
         return sneakers;
     }
+    
+    public async Task<Core.Models.Sneaker.Sneaker> GetById(Guid id, CancellationToken cancellationToken = default)
+    {
+        var sneakerEntity = await dbContext.Sneakers.Include(sneakerEntity => sneakerEntity.Sizes)
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+
+        var sneaker = Core.Models.Sneaker.Sneaker.Reconstitute(
+            sneakerEntity!.Id,
+            sneakerEntity.Name,
+            sneakerEntity.Price,
+            sneakerEntity.Description,
+            sneakerEntity.Sizes.Select(
+                ssEntity => SneakerSize.Reconstitute(
+                    ssEntity.Id,
+                    ssEntity.Size,
+                    ssEntity.RemainedInStock,
+                    ssEntity.SneakerId)).ToList(),
+            sneakerEntity.ImageUrl);
+
+        return sneaker;
+    } 
 
     public async Task<bool> SneakerExists(Guid id, CancellationToken cancellationToken = default)
     {
