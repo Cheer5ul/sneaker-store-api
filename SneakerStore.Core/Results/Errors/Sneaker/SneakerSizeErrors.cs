@@ -6,6 +6,7 @@ public static class SneakerSizeErrors
     {
         public const string InvalidSize = "SneakerSize.InvalidSize"; 
         public const string InvalidRemainedInStockNumber = "SneakerSize.InvalidRemainedInStockNumber";
+        public const string NotFound = "SneakerSize.NotFound";
     }
     
     public static Error InvalidSize(decimal size)
@@ -13,4 +14,7 @@ public static class SneakerSizeErrors
     
     public static Error InvalidRemainedInStockNumber(int remainedInStock)
         => new Error(Codes.InvalidRemainedInStockNumber, $"Amount of remained items {remainedInStock} is invalid.");
+    
+    public static Error NotFound(Guid id)
+        => new Error(Codes.NotFound, $"Size with id {id} not found.");
 }
