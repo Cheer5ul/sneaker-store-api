@@ -29,6 +29,17 @@ public interface ISneakerRepository
     Task<Guid> Create(Core.Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Updates the name of a <see cref="Sneaker"/> entry.
+    /// </summary>
+    /// <remarks>
+    /// Use after getting the Sneaker and updating its property with a domain method. 
+    /// This method does not validate whether the Sneaker with the provided ID exists in the database.
+    /// Ensure that <paramref name="sneaker"/> refers to existing entity before calling this method.  
+    /// </remarks>
+    /// <param name="sneaker">The Sneaker which name is to be updated.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A task representing an asynchronous operation.</returns>
     Task UpdateName(Models.Sneaker.Sneaker sneaker,
         CancellationToken cancellationToken = default);
 
