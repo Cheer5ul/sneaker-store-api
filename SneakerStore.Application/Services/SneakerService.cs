@@ -129,6 +129,9 @@ public class SneakerService(ISneakerRepository sneakerRepository)
         SneakerSizeDto sneakerSizeDto,
         CancellationToken cancellationToken = default)
     {
+        var sneakerExists = await sneakerRepository.SneakerExists(sneakerId, cancellationToken);
+        if(!sneakerExists) return Result<Guid>.Failure([SneakerErrors.NotFound(sneakerId)]);
+        
         // Passing Core validation
         var sneakerSize = SneakerSize.Create(
             sneakerSizeDto.Size,
