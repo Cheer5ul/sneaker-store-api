@@ -191,6 +191,16 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
         return sneakerSizes;
     }
 
+    public async Task<bool> SneakerSizeExists(Guid sneakerSizeId,
+        CancellationToken cancellationToken = default)
+    {
+        var sneakerSizeEntity = await dbContext.SneakerSizes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(ssEntity => ssEntity.Id == sneakerSizeId, cancellationToken);
+        
+        return sneakerSizeEntity != null;
+    }
+
     public async Task<Guid> CreateSize(Guid sneakerId,
         SneakerSize sneakerSize, CancellationToken cancellationToken = default)
     {

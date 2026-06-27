@@ -19,11 +19,11 @@ public interface ISneakerRepository
         CancellationToken cancellationToken = default);
     
     /// <summary>
-    /// Checks whether a Sneaker with the id exists.
+    /// Checks whether a Sneaker with the provided id exists.
     /// </summary>
     /// <param name="id">The id of the Sneaker to be checked, Guid.</param>
     /// <param name="cancellationToken">Cancellation token to cancel an asynchronous operation.</param>
-    /// <returns>True if Sneaker with given id exists, otherwise false. </returns>
+    /// <returns>True if Sneaker with given id exists, otherwise false.</returns>
     Task<bool> SneakerExists(Guid id, CancellationToken cancellationToken = default);
     
     Task<Guid> Create(Core.Models.Sneaker.Sneaker sneaker,
@@ -45,6 +45,15 @@ public interface ISneakerRepository
         CancellationToken cancellationToken = default);
 
     Task<List<SneakerSize>> GetAllSizes(Guid sneakerId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Checks whether a SneakerSize with the provided id exists.
+    /// </summary>
+    /// <param name="sneakerSizeId">The id of the SneakerSize to be checked, Guid.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel an asynchronous operation.</param>
+    /// <returns>True if Sneaker with given id exists, otherwise false.</returns>
+    Task<bool> SneakerSizeExists(Guid sneakerSizeId,
         CancellationToken cancellationToken = default);
 
     Task<Guid> CreateSize(Guid sneakerId,
