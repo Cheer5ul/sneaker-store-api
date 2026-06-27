@@ -59,6 +59,21 @@ public interface ISneakerRepository
     Task<Guid> CreateSize(Guid sneakerId,
         SneakerSize sneakerSize, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Updates the size of a <see cref="SneakerSize"/> entry./>
+    /// </summary>
+    /// <remarks>
+    /// This method does not validate whether the provided IDs exist in the database.
+    /// Ensure that <param name="sneakerId"/> and <param name="sneakerSizeId"/>
+    /// refer to existing entities before calling this method.
+    /// </remarks>
+    /// <param name="sneakerId">The identifier of the Sneaker that owns the size.</param>
+    /// <param name="sneakerSizeId">The identifier of the size entry to update.</param>
+    /// <param name="newSize">The new size value to apply.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the asynchronous operation.</param>
+    /// <returns>A task representing an asynchronous operation.</returns>
+    Task UpdateSneakerSizeSize(Guid sneakerId, Guid sneakerSizeId,
+        decimal newSize, CancellationToken cancellationToken = default);
     Task DeleteSize(Guid sneakerId,
         Guid sneakerSizeId, CancellationToken cancellationToken = default);
 }

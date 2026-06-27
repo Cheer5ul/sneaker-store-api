@@ -172,7 +172,7 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
             .ExecuteDeleteAsync(cancellationToken);
     }
     
-    // Methods to interact with SneakerSize entity
+    #region Methods to interact with SneakerSize entity
     public async Task<List<SneakerSize>> GetAllSizes(Guid sneakerId,
         CancellationToken cancellationToken = default)
     {
@@ -204,8 +204,6 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
     public async Task<Guid> CreateSize(Guid sneakerId,
         SneakerSize sneakerSize, CancellationToken cancellationToken = default)
     {
-        // make sure the item exists in application
-        
         var sneakerEntity = await dbContext.Sneakers
             .Where(sEntity => sEntity.Id == sneakerId).Include(sEntity => sEntity.Sizes)
             .FirstAsync(cancellationToken);
@@ -224,20 +222,26 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
         return sneakerSizeEntity.Id;
     }
 
-    // public async Task UpdateSizeSize(Guid sneakerId, Guid sneakerSizeId,
-    //     decimal newSize)
-    // {
-    //  // make sure the item exists in application
-    // }
+    public async Task UpdateSneakerSizeSize(Guid sneakerId, Guid sneakerSizeId,
+        decimal newSize, CancellationToken cancellationToken = default)
+    {
+        await dbContext.SneakerSizes
+            .Where(ssEntity => ssEntity.SneakerId == sneakerId &&
+                               ssEntity.Id == sneakerSizeId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(
+                    ssEntity => ssEntity.Size, newSize),
+                cancellationToken);
+    }
 
     public async Task DeleteSize(Guid sneakerId,
         Guid sneakerSizeId, CancellationToken cancellationToken = default)
     {
-        // make sure the item exists in application
-        
         await dbContext.SneakerSizes
             .Where(ssEntity => ssEntity.SneakerId == sneakerId
             && ssEntity.Id == sneakerSizeId)
             .ExecuteDeleteAsync(cancellationToken);
     }
+    
+    #endregion
 }
