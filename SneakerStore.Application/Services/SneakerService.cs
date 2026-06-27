@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+using SneakerStore.Appication.DTOs.Sneaker;
 using SneakerStore.Application.DTOs.Sneaker;
 using SneakerStore.Core.Interfaces.Repositories.Sneaker;
 using SneakerStore.Core.Models.Sneaker;
@@ -123,5 +124,27 @@ public class SneakerService(ISneakerRepository sneakerRepository)
 
         return Result<List<SneakerSize>>.Success(sizes);
     }
+
+    public async Task<Result<Guid>> CreateSize(Guid sneakerId,
+        SneakerSizeDto sneakerSizeDto,
+        CancellationToken cancellationToken = default)
+    {
+        // Passing Core validation
+        var sneakerSize = SneakerSize.Create(
+            sneakerSizeDto.Size,
+            sneakerSizeDto.RemainedInStock,
+            sneakerId);
+
+        if (sneakerSize.IsFailure)
+        {
+            return Result<Guid>.Failure(sneakerSize.Errors);
+        }
+            
+        var sneakerGuid = await sneakerRepository.CreateSize(sneakerId,
+            sneakerSize.Value!, cancellationToken);
+        
+        return Result<Guid>.Success(sneakerGuid);
+    }
+    
     
 }
