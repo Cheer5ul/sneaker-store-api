@@ -74,6 +74,7 @@ public interface ISneakerRepository
     /// Updates the size of a <see cref="SneakerSize"/> entry./>
     /// </summary>
     /// <remarks>
+    /// Use after getting the Sneaker and updating its property with a domain method. 
     /// This method does not validate whether the provided IDs exist in the database.
     /// Ensure that <param name="sneakerId"/> and <param name="sneakerSizeId"/>
     /// refer to existing entities before calling this method.
