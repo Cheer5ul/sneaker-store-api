@@ -149,6 +149,13 @@ public class SneakerService(ISneakerRepository sneakerRepository)
         return Result<Guid>.Success(sneakerGuid);
     }
 
+    // public async Task UpdateSneakerSizeSize(Guid sneakerId, Guid sneakerSizeId,
+    //     decimal newSize, CancellationToken cancellationToken = default)
+    // {
+    //     var sneakerSizeExists = await sneakerRepository.SneakerSizeExists(sneakerSizeId, cancellationToken);
+    //     
+    // }
+
     public async Task<Result> DeleteSize(Guid sneakerId,
         Guid sneakerSizeId, CancellationToken cancellationToken = default)
     {
