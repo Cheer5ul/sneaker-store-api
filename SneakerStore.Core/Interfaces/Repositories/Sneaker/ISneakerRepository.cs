@@ -108,4 +108,7 @@ public interface ISneakerRepository
     
     Task DeleteSize(Guid sneakerId,
         Guid sneakerSizeId, CancellationToken cancellationToken = default);
+
+    Task<bool> SneakerAndSneakerSizeExists(Guid sneakerId, Guid sneakerSizeId,
+        CancellationToken cancellationToken = default);
 }
