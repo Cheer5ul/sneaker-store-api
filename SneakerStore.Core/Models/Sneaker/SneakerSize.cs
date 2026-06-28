@@ -16,8 +16,8 @@ public class SneakerSize
         SneakerId = sneakerId;
     }
     public Guid Id { get; }
-    public decimal Size { get; }
-    public int RemainedInStock { get; }
+    public decimal Size { get; private set; }
+    public int RemainedInStock { get; private set; }
     
     public Guid SneakerId { get; }
 
@@ -60,5 +60,37 @@ public class SneakerSize
             id, size, remainedInStock, sneakerId);
         
         return sneakerSize;
+    }
+
+    /// <summary>
+    /// Updates the SneakerSize's size after validating it.
+    /// </summary>
+    /// <param name="newSize">The new size, must be greater than minimal size (10).</param>
+    /// <returns>Success if updated, Failure with validation errors otherwise.</returns>
+    public Result UpdateSize(decimal newSize)
+    {
+        if (newSize < MINIMAL_SIZE)
+        {
+            return Result.Failure([SneakerSizeErrors.InvalidSize(newSize)]);
+        }
+        
+        Size = newSize;
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Updates amount of the remained sizes after the validation.
+    /// </summary>
+    /// <param name="newRemainedInStock">The new amount of remained items, must be greater than zero.</param>
+    /// <returns>Success if updated, Failure with validation errors otherwise.</returns>
+    public Result UpdateRemainedInStock(int newRemainedInStock)
+    {
+        if (newRemainedInStock < 0)
+        {
+            return Result.Failure([SneakerSizeErrors.InvalidRemainedInStockNumber(newRemainedInStock)]);
+        }
+        
+        RemainedInStock = newRemainedInStock;
+        return Result.Success();
     }
 }
