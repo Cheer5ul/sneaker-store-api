@@ -8,9 +8,11 @@ public interface ISneakerRepository
     Task<List<Models.Sneaker.Sneaker>> GetAll(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Retrieves a Sneaker by an id without check of the existence and tracks the entity.
-    /// (AsNoTracking is NOT used).
+    /// Retrieves a Sneaker by an id.
     /// </summary>
+    /// <remarks>
+    /// The method does not check the validity and existence of the Sneaker with given id.
+    /// </remarks>
     /// <param name="id">The id of the Sneaker, Guid.</param>
     /// <param name="includeSizes">Whether you need to include sizes or not, optional parameter, default - true.</param>
     /// <param name="cancellationToken">Cancellation token to cancel an asynchronous operation.</param>

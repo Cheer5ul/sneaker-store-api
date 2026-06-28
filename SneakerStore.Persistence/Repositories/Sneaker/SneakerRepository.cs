@@ -40,7 +40,7 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
     public async Task<Core.Models.Sneaker.Sneaker?> GetById(Guid id, bool includeSizes = true,
         CancellationToken cancellationToken = default)
     {
-        var query = dbContext.Sneakers.AsQueryable();
+        var query = dbContext.Sneakers.AsQueryable().AsNoTracking();
 
         if (includeSizes)
             query = query.Include(sneakerEntity => sneakerEntity.Sizes);
