@@ -234,6 +234,18 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
                 cancellationToken);
     }
 
+    public async Task UpdateSneakerSizeRemainedInStock(Guid sneakerId, Guid sneakerSizeId,
+        int newRemainedInStock, CancellationToken cancellationToken = default)
+    {
+        await dbContext.SneakerSizes
+            .Where(ssEntity => ssEntity.SneakerId == sneakerId &&
+                               ssEntity.Id == sneakerSizeId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(
+                    ssEntity => ssEntity.RemainedInStock, newRemainedInStock),
+                cancellationToken);
+    }
+
     public async Task DeleteSize(Guid sneakerId,
         Guid sneakerSizeId, CancellationToken cancellationToken = default)
     {
