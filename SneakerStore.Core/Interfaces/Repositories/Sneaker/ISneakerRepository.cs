@@ -80,9 +80,7 @@ public interface ISneakerRepository
     /// </summary>
     /// <remarks>
     /// Use after getting the Sneaker and updating its property with a domain method. 
-    /// This method does not validate whether the provided IDs exist in the database.
-    /// Ensure that <param name="sneakerId"/> and <param name="sneakerSizeId"/>
-    /// refer to existing entities before calling this method.
+    /// This method does not validate whether the sneakerSize's IDs exist in the database.
     /// </remarks>
     /// <param name="sneakerSize">The SneakerSize object with updated Size field to apply.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the asynchronous operation.</param>
@@ -93,10 +91,8 @@ public interface ISneakerRepository
     /// Updates the remained in stock amount of a <see cref="SneakerSize"/> entry./>
     /// </summary>
     /// <remarks>
-    /// Use after getting the Sneaker and updating its property with a domain method. 
-    /// This method does not validate whether the provided IDs exist in the database.
-    /// Ensure that <param name="sneakerId"/> and <param name="sneakerSizeId"/>
-    /// refer to existing entities before calling this method.
+    /// Use after getting the SneakerSize and updating its property with a domain method. 
+    /// This method does not validate whether the sneakerSize's IDs exist in the database.
     /// </remarks>
     /// <param name="sneakerSize">The SneakerSize object with updated Size field to apply.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the asynchronous operation.</param>
