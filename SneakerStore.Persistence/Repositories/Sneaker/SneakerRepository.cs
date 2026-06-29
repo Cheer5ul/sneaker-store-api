@@ -191,6 +191,26 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
         return sneakerSizes;
     }
 
+    public async Task<SneakerSize?> FindSize(Guid sneakerSizeId, Guid sneakerId,
+        CancellationToken cancellationToken = default)
+    {
+        var sneakerSizeEntity = await dbContext.SneakerSizes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(ssEntity => ssEntity.Id == sneakerSizeId &&
+                                             ssEntity.SneakerId == sneakerId, 
+                cancellationToken);
+        
+        if(sneakerSizeEntity == null) return null;
+        
+        var sneakerSize = SneakerSize.Reconstitute(
+            sneakerSizeEntity.Id,
+            sneakerSizeEntity.Size,
+            sneakerSizeEntity.RemainedInStock,
+            sneakerSizeEntity.SneakerId);
+        
+        return sneakerSize;
+    }
+
     public async Task<bool> SneakerSizeExists(Guid sneakerSizeId,
         CancellationToken cancellationToken = default)
     {
