@@ -60,7 +60,7 @@ public interface ISneakerRepository
     Task<List<SneakerSize>> GetAllSizes(Guid sneakerId,
         CancellationToken cancellationToken = default);
 
-    Task<SneakerSize?> FindSize(Guid sneakerSizeId, Guid sneakerId,
+    Task<SneakerSize?> FindSize(Guid sneakerId, Guid sneakerSizeId, 
         CancellationToken cancellationToken = default);
 
     /// <summary>

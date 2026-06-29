@@ -191,7 +191,7 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
         return sneakerSizes;
     }
 
-    public async Task<SneakerSize?> FindSize(Guid sneakerSizeId, Guid sneakerId,
+    public async Task<SneakerSize?> FindSize(Guid sneakerId, Guid sneakerSizeId, 
         CancellationToken cancellationToken = default)
     {
         var sneakerSizeEntity = await dbContext.SneakerSizes
