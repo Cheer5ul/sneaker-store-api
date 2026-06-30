@@ -60,6 +60,9 @@ public interface ISneakerRepository
     Task<List<SneakerSize>> GetAllSizes(Guid sneakerId,
         CancellationToken cancellationToken = default);
 
+    Task<SneakerSize?> FindSize(Guid sneakerId, Guid sneakerSizeId, 
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Checks whether a SneakerSize with the provided id exists.
     /// </summary>
@@ -77,34 +80,25 @@ public interface ISneakerRepository
     /// </summary>
     /// <remarks>
     /// Use after getting the Sneaker and updating its property with a domain method. 
-    /// This method does not validate whether the provided IDs exist in the database.
-    /// Ensure that <param name="sneakerId"/> and <param name="sneakerSizeId"/>
-    /// refer to existing entities before calling this method.
+    /// This method does not validate whether the sneakerSize's IDs exist in the database.
     /// </remarks>
-    /// <param name="sneakerId">The identifier of the Sneaker that owns the size.</param>
-    /// <param name="sneakerSizeId">The identifier of the size entry to update.</param>
-    /// <param name="newSize">The new size value to apply.</param>
+    /// <param name="sneakerSize">The SneakerSize object with updated Size field to apply.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the asynchronous operation.</param>
     /// <returns>A task representing an asynchronous operation.</returns>
-    Task UpdateSneakerSizeSize(Guid sneakerId, Guid sneakerSizeId,
-        decimal newSize, CancellationToken cancellationToken = default);
+    Task UpdateSneakerSizeSize(SneakerSize sneakerSize, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates the remained in stock amount of a <see cref="SneakerSize"/> entry./>
     /// </summary>
     /// <remarks>
-    /// Use after getting the Sneaker and updating its property with a domain method. 
-    /// This method does not validate whether the provided IDs exist in the database.
-    /// Ensure that <param name="sneakerId"/> and <param name="sneakerSizeId"/>
-    /// refer to existing entities before calling this method.
+    /// Use after getting the SneakerSize and updating its property with a domain method. 
+    /// This method does not validate whether the sneakerSize's IDs exist in the database.
     /// </remarks>
-    /// <param name="sneakerId">The identifier of the Sneaker that owns the size.</param>
-    /// <param name="sneakerSizeId">The identifier of the size entry to update.</param>
-    /// <param name="newRemainedInStock">The new remained in stock value to apply.</param>
+    /// <param name="sneakerSize">The SneakerSize object with updated Size field to apply.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the asynchronous operation.</param>
     /// <returns>A task representing an asynchronous operation.</returns>
-    Task UpdateSneakerSizeRemainedInStock(Guid sneakerId, Guid sneakerSizeId,
-        int newRemainedInStock, CancellationToken cancellationToken = default);
+    Task UpdateSneakerSizeRemainedInStock(SneakerSize sneakerSize,
+        CancellationToken cancellationToken = default);
     
     Task DeleteSize(Guid sneakerId,
         Guid sneakerSizeId, CancellationToken cancellationToken = default);

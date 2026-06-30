@@ -191,6 +191,26 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
         return sneakerSizes;
     }
 
+    public async Task<SneakerSize?> FindSize(Guid sneakerId, Guid sneakerSizeId, 
+        CancellationToken cancellationToken = default)
+    {
+        var sneakerSizeEntity = await dbContext.SneakerSizes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(ssEntity => ssEntity.Id == sneakerSizeId &&
+                                             ssEntity.SneakerId == sneakerId, 
+                cancellationToken);
+        
+        if(sneakerSizeEntity == null) return null;
+        
+        var sneakerSize = SneakerSize.Reconstitute(
+            sneakerSizeEntity.Id,
+            sneakerSizeEntity.Size,
+            sneakerSizeEntity.RemainedInStock,
+            sneakerSizeEntity.SneakerId);
+        
+        return sneakerSize;
+    }
+
     public async Task<bool> SneakerSizeExists(Guid sneakerSizeId,
         CancellationToken cancellationToken = default)
     {
@@ -222,27 +242,27 @@ public class SneakerRepository(SneakerStoreDbContext dbContext) : ISneakerReposi
         return sneakerSizeEntity.Id;
     }
 
-    public async Task UpdateSneakerSizeSize(Guid sneakerId, Guid sneakerSizeId,
-        decimal newSize, CancellationToken cancellationToken = default)
+    public async Task UpdateSneakerSizeSize(SneakerSize sneakerSize,
+        CancellationToken cancellationToken = default)
     {
         await dbContext.SneakerSizes
-            .Where(ssEntity => ssEntity.SneakerId == sneakerId &&
-                               ssEntity.Id == sneakerSizeId)
+            .Where(ssEntity => ssEntity.SneakerId == sneakerSize.SneakerId &&
+                               ssEntity.Id == sneakerSize.Id)
             .ExecuteUpdateAsync(
                 s => s.SetProperty(
-                    ssEntity => ssEntity.Size, newSize),
+                    ssEntity => ssEntity.Size, sneakerSize.Size),
                 cancellationToken);
     }
 
-    public async Task UpdateSneakerSizeRemainedInStock(Guid sneakerId, Guid sneakerSizeId,
-        int newRemainedInStock, CancellationToken cancellationToken = default)
+    public async Task UpdateSneakerSizeRemainedInStock(SneakerSize sneakerSize,
+        CancellationToken cancellationToken = default)
     {
         await dbContext.SneakerSizes
-            .Where(ssEntity => ssEntity.SneakerId == sneakerId &&
-                               ssEntity.Id == sneakerSizeId)
+            .Where(ssEntity => ssEntity.SneakerId == sneakerSize.SneakerId &&
+                               ssEntity.Id == sneakerSize.Id)
             .ExecuteUpdateAsync(
                 s => s.SetProperty(
-                    ssEntity => ssEntity.RemainedInStock, newRemainedInStock),
+                    ssEntity => ssEntity.RemainedInStock, sneakerSize.RemainedInStock),
                 cancellationToken);
     }
 

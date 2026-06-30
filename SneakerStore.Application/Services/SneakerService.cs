@@ -16,6 +16,7 @@ namespace SneakerStore.Application.Services;
 
 public class SneakerService(ISneakerRepository sneakerRepository)
 {
+    // TODO: Handle race condition between Application existence check and Repository operations
     public async Task<Result<List<Sneaker>>> GetAll(CancellationToken cancellationToken = default)
     {
         var sneakersListResult = await sneakerRepository.GetAll(cancellationToken);
@@ -149,12 +150,36 @@ public class SneakerService(ISneakerRepository sneakerRepository)
         return Result<Guid>.Success(sneakerGuid);
     }
 
-    // public async Task UpdateSneakerSizeSize(Guid sneakerId, Guid sneakerSizeId,
-    //     decimal newSize, CancellationToken cancellationToken = default)
-    // {
-    //     var sneakerSizeExists = await sneakerRepository.SneakerSizeExists(sneakerSizeId, cancellationToken);
-    //     
-    // }
+    public async Task<Result> UpdateSneakerSizeSize(Guid sneakerId, Guid sneakerSizeId,
+        decimal newSize, CancellationToken cancellationToken = default)
+    {
+        var sneakerSize = await sneakerRepository.FindSize(sneakerId, sneakerSizeId, cancellationToken);
+        if (sneakerSize == null) return Result.Failure([SneakerSizeErrors.NotFound(sneakerSizeId)]);
+        
+        var updateResult = sneakerSize.UpdateSize(newSize);
+        if (updateResult.IsFailure) return Result.Failure(updateResult.Errors);
+        
+        await sneakerRepository.UpdateSneakerSizeSize(
+            sneakerSize,
+            cancellationToken);
+        
+        return Result.Success();
+    }
+
+    public async Task<Result> UpdateSneakerSizeRemainedInStock(Guid sneakerId, Guid sneakerSizeId,
+        int newRemainedInStock, CancellationToken cancellationToken = default)
+    {
+        var sneakerSize = await sneakerRepository.FindSize(sneakerId, sneakerSizeId, cancellationToken);
+        if (sneakerSize == null) return Result.Failure([SneakerSizeErrors.NotFound(sneakerSizeId)]);
+        
+        var updateResult = sneakerSize.UpdateRemainedInStock(newRemainedInStock);
+        if (updateResult.IsFailure) return Result.Failure(updateResult.Errors);
+
+        await sneakerRepository.UpdateSneakerSizeRemainedInStock(
+            sneakerSize, cancellationToken);
+        
+        return Result.Success();
+    }
 
     public async Task<Result> DeleteSize(Guid sneakerId,
         Guid sneakerSizeId, CancellationToken cancellationToken = default)
