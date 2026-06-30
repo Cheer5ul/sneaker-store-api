@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\SneakerStore.Application\SneakerStore.Application.csproj" />
       <ProjectReference Include="..\SneakerStore.Persistence\SneakerStore.Persistence.csproj" />
     </ItemGroup>
 
