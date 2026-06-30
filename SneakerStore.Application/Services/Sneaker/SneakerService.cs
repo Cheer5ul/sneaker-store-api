@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading;
-using System.Threading.Tasks;
-using SneakerStore.Appication.DTOs.Sneaker;
+﻿using SneakerStore.Appication.DTOs.Sneaker;
 using SneakerStore.Application.DTOs.Sneaker;
 using SneakerStore.Core.Interfaces.Repositories.Sneaker;
 using SneakerStore.Core.Models.Sneaker;
@@ -14,7 +7,7 @@ using SneakerStore.Core.Results.Errors.Sneaker;
 
 namespace SneakerStore.Application.Services;
 
-public class SneakerService(ISneakerRepository sneakerRepository)
+public class SneakerService(ISneakerRepository sneakerRepository) : ISneakerService
 {
     // TODO: Handle race condition between Application existence check and Repository operations
     public async Task<Result<List<Sneaker>>> GetAll(CancellationToken cancellationToken = default)
