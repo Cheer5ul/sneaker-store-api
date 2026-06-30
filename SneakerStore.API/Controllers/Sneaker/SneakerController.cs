@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SneakerStore.Application.DTOs.Sneaker;
 using SneakerStore.Application.Services;
 using SneakerStore.Core.Interfaces.Repositories.Sneaker;
 using SneakerStore.DTOs.Sneaker;
@@ -41,8 +42,21 @@ public class SneakerController : ControllerBase
                 )
         ).ToList();
         
-        return Ok(result);
+        return Ok(sneakerResponses);
     }
     
-    
+    // public async Task<ActionResult<Guid>> Create(CreateSneakerDto createSneakerDto,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var result = await _sneakerService.Create(createSneakerDto, cancellationToken);
+    //
+    //     if (result.IsFailure)
+    //     {
+    //         // return null;
+    //     }
+    //
+    //     var response = result.Value!;
+    //     
+    //     return Ok(response);
+    // }
 }
