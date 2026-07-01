@@ -24,9 +24,9 @@ public class FailureHandler : IFailureHandler
             Title = GetErrorTitle(result),
             Detail = GetErrorDetail(result),
             Status = statusCode,
-            Instance = $"{httpContext.Request.Method}" +
-                       $"{httpContext.Request.Scheme}://" +
-                       $"{httpContext.Request.Host}" +
+            Instance = /*$"{httpContext.Request.Method}" + */
+                       $"{httpContext.Request.Scheme}" +
+                       $"://{httpContext.Request.Host}" +
                        $"{httpContext.Request.Path}",
             Extensions = GetErrorExtensions(allErrors)!
         };
