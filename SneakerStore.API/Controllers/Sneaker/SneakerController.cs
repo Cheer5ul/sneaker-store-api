@@ -47,8 +47,8 @@ public class SneakerController : ControllerBase
         return Ok(sneakerResponses);
     }
     
-    [HttpPost("create-sneaker")]
-    public async Task<ActionResult<Guid>> Create(CreateSneakerDto createSneakerDto,
+    [HttpPost("create")]
+    public async Task<ActionResult<Guid>> Create([FromBody] CreateSneakerDto createSneakerDto,
         CancellationToken cancellationToken)
     {
         var result = await _sneakerService.Create(createSneakerDto, cancellationToken);
@@ -105,7 +105,7 @@ public class SneakerController : ControllerBase
         return Ok();
     }
     
-
+    [HttpDelete("{id:guid}/delete")]
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var result = await _sneakerService.Delete(id, cancellationToken);
@@ -114,6 +114,5 @@ public class SneakerController : ControllerBase
         
         return Ok();
     }
-    
     
 }
