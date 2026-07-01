@@ -35,8 +35,6 @@ builder.Services.AddScoped<ISneakerService, SneakerService>();
 // Failure Handlers
 builder.Services.AddScoped<IFailureHandler, FailureHandler>();
 
-builder.Services.AddProblemDetails();
-
 var app = builder.Build();
 
 // Middleware pipeline
