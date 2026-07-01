@@ -114,5 +114,14 @@ public class SneakerController : ControllerBase
         
         return Ok();
     }
-    
+
+    // [HttpGet("{id:guid}/sizes")]
+    // public async Task<ActionResult<List<SneakerResponseDto>>> GetAllSizes(Guid id, CancellationToken cancellationToken)
+    // {
+    //     var result = await _sneakerService.GetAllSizes(id, cancellationToken);
+    //
+    //     if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+    //     
+    //     var sneakerSizeResponses = 
+    // }
 }
