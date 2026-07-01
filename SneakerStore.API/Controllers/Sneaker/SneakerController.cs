@@ -83,6 +83,29 @@ public class SneakerController : ControllerBase
         return Ok();
     }
 
+    [HttpPatch("{id:guid}/description")]
+    public async Task<ActionResult> UpdateDescription(Guid id, [FromBody] UpdateDescriptionDto updateDescriptionDto,
+        CancellationToken cancellationToken)
+    {
+        var result = await _sneakerService.UpdateDescription(id, updateDescriptionDto.Description, cancellationToken);
+        
+        if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
+
+    [HttpPatch("{id:guid}/image")]
+    public async Task<ActionResult> UpdateImage(Guid id, [FromBody] UpdateImageDto updateImageDto,
+        CancellationToken cancellationToken)
+    {
+        var result = await _sneakerService.UpdateImageUrl(id, updateImageDto.ImageUrl, cancellationToken);
+        
+        if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
+    
+
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var result = await _sneakerService.Delete(id, cancellationToken);
